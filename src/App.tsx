@@ -918,7 +918,14 @@ export default function App() {
 
   const ADMIN_EMAIL = 'rstenguriya16@gmail.com'; 
   const isAdmin = user?.email === ADMIN_EMAIL;
-
+useEffect(() => {
+  if (user && user.email === ADMIN_EMAIL) {
+    // Admin ko force admin panel par rakho
+    if (!location.pathname.startsWith('/admin')) {
+      navigate('/admin');
+    }
+  }
+}, [user, location.pathname]);
   const sidebarItems: { id: string; label: string; icon: any; action?: () => void }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'generate', label: 'Generate Paper', icon: PlusCircle },
