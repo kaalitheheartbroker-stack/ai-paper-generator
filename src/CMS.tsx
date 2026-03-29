@@ -12,20 +12,20 @@ export const AdminPages = ({ pages }: any) => {
           ...formData,
           lastUpdated: serverTimestamp()
         },
-        { merge: true } // 🔥 IMPORTANT FIX
+        { merge: true }
       );
 
       alert("Page saved successfully ✅");
       setEditingPage(null);
     } catch (error) {
-      console.error("Save Error:", error);
+      console.error(error);
       alert("Error saving page ❌");
     }
   };
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-black">Manage Dynamic Pages</h2>
+      <h2 className="text-2xl font-black">Manage Pages</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {['about', 'contact', 'privacy-policy', 'terms'].map(slug => {
@@ -37,14 +37,10 @@ export const AdminPages = ({ pages }: any) => {
             };
 
           return (
-            <div key={slug} className="premium-card p-8 flex items-center justify-between group">
-              <div className="space-y-1">
-                <h4 className="font-bold text-zinc-900 capitalize">
-                  {slug.replace('-', ' ')}
-                </h4>
-                <p className="text-[10px] text-zinc-400 uppercase tracking-widest">
-                  Route: /{slug}
-                </p>
+            <div key={slug} className="p-6 border rounded-xl flex justify-between">
+              <div>
+                <h4 className="font-bold">{slug}</h4>
+                <p className="text-sm text-gray-400">/{slug}</p>
               </div>
 
               <button
@@ -55,9 +51,8 @@ export const AdminPages = ({ pages }: any) => {
                     content: page.content
                   });
                 }}
-                className="p-3 text-zinc-400 hover:text-brand-primary hover:bg-emerald-50 rounded-xl transition-all"
               >
-                <Edit size={20} />
+                Edit
               </button>
             </div>
           );
@@ -65,47 +60,34 @@ export const AdminPages = ({ pages }: any) => {
       </div>
 
       {editingPage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-zinc-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-[3rem] w-full max-w-4xl p-12 space-y-8 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 w-full max-w-xl">
 
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-black capitalize">
-                Edit {editingPage.id.replace('-', ' ')} Page
-              </h3>
-              <button onClick={() => setEditingPage(null)}>
-                <X />
-              </button>
-            </div>
+            <h3 className="text-lg font-bold mb-4">
+              Edit {editingPage.id}
+            </h3>
 
-            <div className="space-y-6">
-              <input
-                type="text"
-                value={formData.title}
-                onChange={e =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                className="w-full px-6 py-4 bg-zinc-50 border rounded-2xl"
-              />
+            <input
+              type="text"
+              value={formData.title}
+              onChange={e =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              className="w-full p-3 border mb-4"
+            />
 
-              <textarea
-                rows={15}
-                value={formData.content}
-                onChange={e =>
-                  setFormData({ ...formData, content: e.target.value })
-                }
-                className="w-full px-8 py-8 bg-zinc-50 border rounded-2xl"
-              />
+            <textarea
+              rows={10}
+              value={formData.content}
+              onChange={e =>
+                setFormData({ ...formData, content: e.target.value })
+              }
+              className="w-full p-3 border mb-4"
+            />
 
-              <div className="flex justify-end gap-4">
-                <button onClick={() => setEditingPage(null)}>
-                  Cancel
-                </button>
-
-                <button onClick={handleSave} className="btn-primary">
-                  Save Changes
-                </button>
-              </div>
-            </div>
+            <button onClick={handleSave} className="bg-green-500 text-white px-4 py-2">
+              Save
+            </button>
 
           </div>
         </div>
