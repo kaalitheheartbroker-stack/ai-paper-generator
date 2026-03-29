@@ -1,0 +1,22 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Define admin check function
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'rstenguriya16@gmail.com';
+    }
+
+    // Blogs folder - anyone can read the images, only admin can upload
+    match /blogs/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Default catch-all
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

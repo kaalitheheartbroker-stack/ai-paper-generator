@@ -1,0 +1,66 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Define admin check function
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'rstenguriya16@gmail.com';
+    }
+
+    // Blogs - Anyone can read, only admin can write
+    match /blogs/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Pages - Anyone can read, only admin can write
+    match /pages/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Ad Settings - Anyone can read, only admin can write
+    match /settings/ads {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Leaderboard
+    match /leaderboard/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Default catch-all for existing collections (users, papers, books)
+    // Allows signed in users to read and write their own data, etc.
+    // Explicit matching for users and papers based on previous architecture:
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /papers/{paperId} {
+      // Allow users to access their own generated papers
+      allow read, write: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Allow read/update if the existing doc belongs to them
+      allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+    
+    // Books - anyone can read, only admin can add/delete
+    match /books/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Settings (Categories, etc.) - anyone can read, only admin writes
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Fallback block
+    match /{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

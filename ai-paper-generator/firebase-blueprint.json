@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "Paper": {
+      "title": "Paper",
+      "description": "A generated exam paper",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "The name of the paper" },
+        "type": { "type": "string", "description": "Type of questions" },
+        "questions": { "type": "number", "description": "Number of questions" },
+        "time": { "type": "number", "description": "Time limit in minutes" },
+        "date": { "type": "string", "description": "Creation date" },
+        "status": { "type": "string", "enum": ["completed", "pending"], "description": "Status of the paper" },
+        "uid": { "type": "string", "description": "Owner UID" },
+        "category": { "type": "string", "description": "Exam category (e.g., UPSC, SSC)" },
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "options": { "type": "array", "items": { "type": "string" } },
+              "answer": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["name", "questions", "time", "date", "status", "uid", "content"]
+    },
+    "Leaderboard": {
+      "title": "Leaderboard",
+      "description": "Global leaderboard entry",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "score": { "type": "number" },
+        "accuracy": { "type": "number" },
+        "timeTaken": { "type": "number" },
+        "paperId": { "type": "string" },
+        "paperName": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "score", "timestamp"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin", "student"] },
+        "verified": { "type": "boolean" }
+      },
+      "required": ["email", "role", "verified"]
+    },
+    "OTP": {
+      "title": "OTP",
+      "description": "One-time password for email verification",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "otp": { "type": "string" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "password": { "type": "string", "description": "Temporary storage for password" }
+      },
+      "required": ["email", "otp", "expiresAt"]
+    }
+  },
+  "firestore": {
+    "/papers/{paperId}": {
+      "schema": "Paper",
+      "description": "Collection of exam papers"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/otps/{email}": {
+      "schema": "OTP",
+      "description": "Temporary storage for OTPs"
+    }
+  }
+}
