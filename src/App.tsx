@@ -57,7 +57,6 @@ import {
   where, 
   onSnapshot, 
   addDoc, 
-  updateDoc, 
   deleteDoc 
 } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -334,6 +333,15 @@ export default function App() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Redirect admin users to /admin panel automatically
+  useEffect(() => {
+    if (user && user.email === 'rstenguriya16@gmail.com') {
+      if (!location.pathname.startsWith('/admin')) {
+        navigate('/admin');
+      }
+    }
+  }, [user, location.pathname, navigate]);
 
   const activeTab: Tab = useMemo(() => {
     const path = location.pathname;
@@ -786,9 +794,9 @@ export default function App() {
     setIsTesting(false);
 
     try {
-      await updateDoc(doc(db, 'papers', activePaperId), {
+      await setDoc(doc(db, 'papers', activePaperId), {
         status: 'completed'
-      });
+      }, { merge: true });
     } catch (error) {
       console.error('Error updating paper status:', error);
     }
@@ -918,14 +926,7 @@ export default function App() {
 
   const ADMIN_EMAIL = 'rstenguriya16@gmail.com'; 
   const isAdmin = user?.email === ADMIN_EMAIL;
-useEffect(() => {
-  if (user && user.email === ADMIN_EMAIL) {
-    // Admin ko force admin panel par rakho
-    if (!location.pathname.startsWith('/admin')) {
-      navigate('/admin');
-    }
-  }
-}, [user, location.pathname]);
+
   const sidebarItems: { id: string; label: string; icon: any; action?: () => void }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'generate', label: 'Generate Paper', icon: PlusCircle },
