@@ -90,14 +90,14 @@ const Footer = () => {
                 <Mail size={20} className="text-brand-primary shrink-0" />
                 <div className="text-xs">
                   <p className="text-white font-bold mb-0.5">Email Support</p>
-                  <p>support@preexamwale.in</p>
+                  <p>support@trivendrasingh@zohomail.in</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 text-zinc-400">
                 <Phone size={20} className="text-brand-primary shrink-0" />
                 <div className="text-xs">
                   <p className="text-white font-bold mb-0.5">Phone</p>
-                  <p>+91 (Support Team)</p>
+                  <p>+91 7906168559)</p>
                 </div>
               </div>
             </div>
